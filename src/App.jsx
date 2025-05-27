@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ExpensesPage from './pages/ExpensesPage';
@@ -22,14 +22,20 @@ function App() {
         />
         <Route
           path="/analytics"
-          element={isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />}
+          element={
+            isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />
+          }
         />
 
         {/* Редирект по умолчанию */}
         <Route
           path="/"
           element={
-            isAuth ? <Navigate to="/expenses" replace /> : <Navigate to="/login" replace />
+            isAuth ? (
+              <Navigate to="/expenses" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
 
