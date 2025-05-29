@@ -14,9 +14,11 @@ const Register = () => {
   const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const emailValid = isEmailValid(userEmail);
   const passwordValid = userPassword.length >= 5;
-  const confirmPasswordValid = confirmPassword === userPassword && confirmPassword !== '';
+  const confirmPasswordValid =
+    confirmPassword === userPassword && confirmPassword !== '';
 
-  const showError = formSubmitted && (!emailValid || !passwordValid || !confirmPasswordValid);
+  const showError =
+    formSubmitted && (!emailValid || !passwordValid || !confirmPasswordValid);
 
   useEffect(() => {
     if (emailValid && passwordValid && confirmPasswordValid) {
@@ -27,9 +29,12 @@ const Register = () => {
   }, [emailValid, passwordValid, confirmPasswordValid, formSubmitted]);
 
   const inputClass = (hasError, isValid) => {
-    const baseClasses = 'border rounded px-3 py-2 w-full font-montserrat text-black text-[12px] font-normal leading-[15px] tracking-[0px] text-left placeholder:text-[#999999] transition-colors duration-200';
-    if (hasError) return `${baseClasses} border-red-700 bg-red-100 text-red-700 placeholder:text-red-700`;
-    if (isValid) return `${baseClasses} border-green-700 bg-green-100 text-green-700 placeholder:text-green-700`;
+    const baseClasses =
+      'border rounded px-3 py-2 w-full font-montserrat text-black text-[12px] font-normal leading-[15px] tracking-[0px] text-left placeholder:text-[#999999] transition-colors duration-200';
+    if (hasError)
+      return `${baseClasses} border-red-700 bg-red-100 text-red-700 placeholder:text-red-700`;
+    if (isValid)
+      return `${baseClasses} border-green-700 bg-green-100 text-green-700 placeholder:text-green-700`;
     return `${baseClasses} border-gray-300`;
   };
 
@@ -46,8 +51,11 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-xs" noValidate>
-
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 w-full max-w-xs"
+      noValidate
+    >
       {/* Email поле */}
       <div className="relative w-full">
         <input
@@ -83,7 +91,10 @@ const Register = () => {
       {/* Подтверждение пароля поле */}
       <div className="relative w-full">
         <input
-          className={inputClass(formSubmitted && !confirmPasswordValid, confirmPasswordValid)}
+          className={inputClass(
+            formSubmitted && !confirmPasswordValid,
+            confirmPasswordValid,
+          )}
           type="password"
           placeholder="Повторите пароль"
           value={confirmPassword}
@@ -98,7 +109,8 @@ const Register = () => {
 
       {showError && (
         <p className="text-red-700 text-[12px] font-montserrat text-center">
-          Упс! Введенные вами данные не корректны. Введите данные корректно и повторите попытку.
+          Упс! Введенные вами данные не корректны. Введите данные корректно и
+          повторите попытку.
         </p>
       )}
 
@@ -114,18 +126,3 @@ const Register = () => {
 };
 
 export default Register;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
