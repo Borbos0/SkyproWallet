@@ -4,30 +4,32 @@ import { useNavigate } from 'react-router-dom';
 const Register = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [isButtonInactive, setIsButtonInactive] = useState(false);
 
-  const emailValid = email.includes('@');
-  const passwordValid = password.length >= 5;
-  const repeatPasswordValid = repeatPassword === password && repeatPassword !== '';
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-  
-  const showEmailError = isSubmitted && !emailValid;
-  const showPasswordError = isSubmitted && !passwordValid;
-  const showRepeatPasswordError = isSubmitted && !repeatPasswordValid;
+  const emailValid = isEmailValid(userEmail);
+  const passwordValid = userPassword.length >= 5;
+  const confirmPasswordValid = confirmPassword === userPassword && confirmPassword !== '';
+
+  const showError = formSubmitted && (!emailValid || !passwordValid || !confirmPasswordValid);
 
   useEffect(() => {
-    if (isButtonDisabled) {
-      if (emailValid && passwordValid && repeatPasswordValid) {
-        setIsButtonDisabled(false);
-        setIsSubmitted(false); 
+    if (isButtonInactive) {
+      if (emailValid && passwordValid && confirmPasswordValid) {
+        setIsButtonInactive(false);
+        setFormSubmitted(false); 
       }
     }
-  }, [emailValid, passwordValid, repeatPasswordValid, isButtonDisabled]);
+  }, [emailValid, passwordValid, confirmPasswordValid, isButtonInactive]);
 
   const inputClass = (hasError, isValid) => {
     const baseClasses = 'border rounded px-3 py-2 w-full font-montserrat text-black text-[12px] font-normal leading-[15px] tracking-[0px] text-left placeholder:text-[#999999] transition-colors duration-200';
@@ -43,16 +45,15 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setFormSubmitted(true);
 
-    if (!emailValid || !passwordValid || !repeatPasswordValid) {
-
-      setIsButtonDisabled(true);
+    if (!emailValid || !passwordValid || !confirmPasswordValid) {
+      setIsButtonInactive(true);
       return;
     }
 
-    setIsSubmitting(true);
-    setIsButtonDisabled(true); 
+    setIsFormSubmitting(true);
+    setIsButtonInactive(true); 
 
     setTimeout(() => {
       navigate('/login');
@@ -62,67 +63,60 @@ const Register = () => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-xs" noValidate>
       <input
-        className={inputClass(showEmailError, emailValid)}
+        className={inputClass(formSubmitted && !emailValid, emailValid)}
         type="email"
         placeholder="Email"
-        value={email}
+        value={userEmail}
         onChange={(e) => {
-          setEmail(e.target.value);
-          if (isSubmitted) setIsSubmitted(false);
+          setUserEmail(e.target.value);
+          if (formSubmitted) setFormSubmitted(false);
         }}
       />
-      {showEmailError && (
-        <p className="text-red-700 text-[12px] font-montserrat text-center">
-          Адрес электронной почты должен содержать символ "@".
-        </p>
-      )}
 
       <input
-        className={inputClass(showPasswordError, passwordValid)}
+        className={inputClass(formSubmitted && !passwordValid, passwordValid)}
         type="password"
         placeholder="Пароль"
-        value={password}
+        value={userPassword}
         onChange={(e) => {
-          setPassword(e.target.value);
-          if (isSubmitted) setIsSubmitted(false);
+          setUserPassword(e.target.value);
+          if (formSubmitted) setFormSubmitted(false);
         }}
       />
-      {showPasswordError && (
-        <p className="text-red-700 text-[12px] font-montserrat text-center">
-          Пароль должен быть не менее 5 символов.
-        </p>
-      )}
 
       <input
-        className={inputClass(showRepeatPasswordError, repeatPasswordValid)}
+        className={inputClass(formSubmitted && !confirmPasswordValid, confirmPasswordValid)}
         type="password"
         placeholder="Повторите пароль"
-        value={repeatPassword}
+        value={confirmPassword}
         onChange={(e) => {
-          setRepeatPassword(e.target.value);
-          if (isSubmitted) setIsSubmitted(false);
+          setConfirmPassword(e.target.value);
+          if (formSubmitted) setFormSubmitted(false);
         }}
       />
-      {showRepeatPasswordError && (
+
+      {showError && (
         <p className="text-red-700 text-[12px] font-montserrat text-center">
-          Пароли не совпадают или поле пустое.
+          Упс! Введенные вами данные не корректны. Введите данные корректно и повторите попытку.
         </p>
       )}
 
       <button
         type="submit"
-        disabled={isSubmitting || isButtonDisabled}
-        className={`w-full py-2 px-4 rounded-[6px] font-montserrat text-[12px] font-semibold leading-[15px] tracking-[0px] text-center
-          ${(isSubmitting || isButtonDisabled) ? 'bg-gray-400 cursor-not-allowed' : 'bg-[rgb(31,164,108)] hover:bg-green-700 text-white'}
+        disabled={isFormSubmitting || isButtonInactive}
+        className={`
+          w-full py-2 rounded
+          ${isFormSubmitting || isButtonInactive ? 'bg-[#999999] cursor-not-allowed' : 'bg-[rgb(31,164,108)] hover:bg-green-700 text-white'}
         `}
       >
-        {isSubmitting ? 'Отправка...' : 'Зарегистрироваться'}
+        Зарегистрироваться
       </button>
     </form>
   );
 };
 
 export default Register;
+
 
 
 

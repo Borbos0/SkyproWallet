@@ -1,6 +1,6 @@
 const Header = () => (
-    <header className="bg-rgb(255, 255, 255) text-black py-4 px-6 mb-6">
-      <h1 className="text-black">Skypro Wallet</h1>
+    <header className="bg-blue-700 text-white py-4 px-6 mb-6">
+      <h1 className="text-xl font-bold">Skypro Wallet</h1>
     </header>
   );
   

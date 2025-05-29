@@ -36,14 +36,13 @@ const RegisterPage = () => (
   className="
     pt-1
     underline
-    text-[#999999]        /* color: rgb(153,153,153) */
-    font-montserrat       /* шрифт Montserrat */
-    text-[12px]           /* font-size: 12px */
-    font-normal           /* font-weight: 400 */
-    leading-[150%]        /* line-height: 150% */
-    tracking-[0px]        /* letter-spacing: 0 */
-    text-center           /* text-align: center */
-    block                 /* чтобы text-align работал */
+    text-[#999999]    
+    font-montserrat   
+    text-[12px]       
+    font-normal       
+    leading-[150%]    
+    tracking-[0px]    
+    text-center                         
   "
 >
   Войдите здесь
