@@ -11,11 +11,7 @@ const Register = () => {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [isButtonInactive, setIsButtonInactive] = useState(false);
 
-  const isEmailValid = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
+  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const emailValid = isEmailValid(userEmail);
   const passwordValid = userPassword.length >= 5;
   const confirmPasswordValid = confirmPassword === userPassword && confirmPassword !== '';
@@ -23,77 +19,82 @@ const Register = () => {
   const showError = formSubmitted && (!emailValid || !passwordValid || !confirmPasswordValid);
 
   useEffect(() => {
-    if (isButtonInactive) {
-      if (emailValid && passwordValid && confirmPasswordValid) {
-        setIsButtonInactive(false);
-        setFormSubmitted(false); 
-      }
+    if (emailValid && passwordValid && confirmPasswordValid) {
+      setIsButtonInactive(false);
+    } else if (formSubmitted) {
+      setIsButtonInactive(true);
     }
-  }, [emailValid, passwordValid, confirmPasswordValid, isButtonInactive]);
+  }, [emailValid, passwordValid, confirmPasswordValid, formSubmitted]);
 
   const inputClass = (hasError, isValid) => {
     const baseClasses = 'border rounded px-3 py-2 w-full font-montserrat text-black text-[12px] font-normal leading-[15px] tracking-[0px] text-left placeholder:text-[#999999] transition-colors duration-200';
-
-    if (hasError) {
-      return `${baseClasses} border-red-700 bg-red-100 text-red-700 placeholder:text-red-700`;
-    }
-    if (isValid) {
-      return `${baseClasses} border-green-700 bg-green-100 text-green-700 placeholder:text-green-700`;
-    }
+    if (hasError) return `${baseClasses} border-red-700 bg-red-100 text-red-700 placeholder:text-red-700`;
+    if (isValid) return `${baseClasses} border-green-700 bg-green-100 text-green-700 placeholder:text-green-700`;
     return `${baseClasses} border-gray-300`;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
-
     if (!emailValid || !passwordValid || !confirmPasswordValid) {
       setIsButtonInactive(true);
       return;
     }
-
     setIsFormSubmitting(true);
-    setIsButtonInactive(true); 
-
-    setTimeout(() => {
-      navigate('/login');
-    }, 1000);
+    setIsButtonInactive(true);
+    setTimeout(() => navigate('/login'), 1000);
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-xs" noValidate>
-      <input
-        className={inputClass(formSubmitted && !emailValid, emailValid)}
-        type="email"
-        placeholder="Email"
-        value={userEmail}
-        onChange={(e) => {
-          setUserEmail(e.target.value);
-          if (formSubmitted) setFormSubmitted(false);
-        }}
-      />
 
-      <input
-        className={inputClass(formSubmitted && !passwordValid, passwordValid)}
-        type="password"
-        placeholder="Пароль"
-        value={userPassword}
-        onChange={(e) => {
-          setUserPassword(e.target.value);
-          if (formSubmitted) setFormSubmitted(false);
-        }}
-      />
+      {/* Email поле */}
+      <div className="relative w-full">
+        <input
+          className={inputClass(formSubmitted && !emailValid, emailValid)}
+          type="email"
+          placeholder="Email"
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
+        />
+        {formSubmitted && !emailValid && (
+          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
+            *
+          </span>
+        )}
+      </div>
 
-      <input
-        className={inputClass(formSubmitted && !confirmPasswordValid, confirmPasswordValid)}
-        type="password"
-        placeholder="Повторите пароль"
-        value={confirmPassword}
-        onChange={(e) => {
-          setConfirmPassword(e.target.value);
-          if (formSubmitted) setFormSubmitted(false);
-        }}
-      />
+      {/* Пароль поле */}
+      <div className="relative w-full">
+        <input
+          className={inputClass(formSubmitted && !passwordValid, passwordValid)}
+          type="password"
+          placeholder="Пароль"
+          value={userPassword}
+          onChange={(e) => setUserPassword(e.target.value)}
+        />
+        {formSubmitted && !passwordValid && (
+          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
+            *
+          </span>
+        )}
+      </div>
+
+      {/* Подтверждение пароля поле */}
+      <div className="relative w-full">
+        <input
+          className={inputClass(formSubmitted && !confirmPasswordValid, confirmPasswordValid)}
+          type="password"
+          placeholder="Повторите пароль"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        {formSubmitted && !confirmPasswordValid && (
+          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
+            *
+          </span>
+        )}
+      </div>
 
       {showError && (
         <p className="text-red-700 text-[12px] font-montserrat text-center">
@@ -104,10 +105,7 @@ const Register = () => {
       <button
         type="submit"
         disabled={isFormSubmitting || isButtonInactive}
-        className={`
-          w-full py-2 rounded
-          ${isFormSubmitting || isButtonInactive ? 'bg-[#999999] cursor-not-allowed' : 'bg-[rgb(31,164,108)] hover:bg-green-700 text-white'}
-        `}
+        className={`w-full py-2 rounded ${isFormSubmitting || isButtonInactive ? 'bg-[#999999] cursor-not-allowed' : 'bg-[rgb(31,164,108)] hover:bg-green-700 text-white'}`}
       >
         Зарегистрироваться
       </button>
@@ -116,6 +114,8 @@ const Register = () => {
 };
 
 export default Register;
+
+
 
 
 
