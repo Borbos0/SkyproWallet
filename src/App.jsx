@@ -6,7 +6,7 @@ import ExpensesPage from './pages/ExpensesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 
 function App() {
-  const isAuth = false;
+  const isAuth = true;
 
   return (
     <BrowserRouter>
