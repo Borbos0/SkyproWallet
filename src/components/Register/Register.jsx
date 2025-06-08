@@ -39,16 +39,25 @@ const Register = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-    if (!emailValid || !passwordValid || !confirmPasswordValid) {
-      setIsButtonInactive(true);
-      return;
-    }
-    setIsFormSubmitting(true);
+  e.preventDefault();
+  setFormSubmitted(true);
+
+  if (!emailValid || !passwordValid || !confirmPasswordValid) {
     setIsButtonInactive(true);
-    setTimeout(() => navigate('/login'), 1000);
-  };
+    return;
+  }
+
+  localStorage.setItem(
+    'user',
+    JSON.stringify({ email: userEmail, password: userPassword })
+  );
+
+  setIsFormSubmitting(true);
+  setIsButtonInactive(true);
+
+  setTimeout(() => navigate('/login'), 1000);
+};
+
 
   return (
     <form
@@ -56,7 +65,6 @@ const Register = () => {
       className="flex flex-col gap-4 w-full max-w-xs"
       noValidate
     >
-      {/* Email поле */}
       <div className="relative w-full">
         <input
           className={inputClass(formSubmitted && !emailValid, emailValid)}
@@ -72,7 +80,6 @@ const Register = () => {
         )}
       </div>
 
-      {/* Пароль поле */}
       <div className="relative w-full">
         <input
           className={inputClass(formSubmitted && !passwordValid, passwordValid)}
@@ -88,7 +95,6 @@ const Register = () => {
         )}
       </div>
 
-      {/* Подтверждение пароля поле */}
       <div className="relative w-full">
         <input
           className={inputClass(
@@ -115,12 +121,28 @@ const Register = () => {
       )}
 
       <button
-        type="submit"
-        disabled={isFormSubmitting || isButtonInactive}
-        className={`w-full py-2 rounded ${isFormSubmitting || isButtonInactive ? 'bg-[#999999] cursor-not-allowed' : 'bg-[rgb(31,164,108)] hover:bg-green-700 text-white'}`}
-      >
-        Зарегистрироваться
-      </button>
+  type="submit"
+  disabled={isFormSubmitting || isButtonInactive}
+  className={`
+    w-full
+    rounded-[6px]
+    ${isFormSubmitting || isButtonInactive
+      ? 'bg-[#999999] cursor-not-allowed'
+      : 'bg-[rgb(31,164,108)] hover:bg-green-700'}
+    text-white
+    text-[12px]
+    font-semibold
+    leading-[15px]
+    tracking-[0px]
+    text-center
+    font-montserrat
+    py-2
+    transition
+  `}
+>
+  Зарегистрироваться
+</button>
+
     </form>
   );
 };

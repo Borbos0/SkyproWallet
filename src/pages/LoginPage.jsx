@@ -1,16 +1,8 @@
 import Header from '../components/Header/Header';
 import Login from '../components/Login/Login';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const LoginPage = () => {
-  useEffect(() => {
-
-    localStorage.setItem(
-      'user',
-      JSON.stringify({ email: 'your@mail.com', password: 'yourPassword' })
-    );
-  }, []);
 
   return (
     <div>

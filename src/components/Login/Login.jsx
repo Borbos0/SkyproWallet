@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail]       = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]       = useState(false);
-  const navigate                 = useNavigate();
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
-  // Читаем сохранённого пользователя из localStorage
   const savedUser = (() => {
     try {
       return JSON.parse(localStorage.getItem('user'));
@@ -19,24 +18,31 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Если в хранилище нет юзера или данные не совпали — ошибка
-    if (
-      !savedUser ||
-      email !== savedUser.email ||
-      password !== savedUser.password
-    ) {
+    // Проверка на пустые поля (дополнительно, но часто делают)
+    if (!email.trim() || !password.trim()) {
       setError(true);
       return;
     }
 
-    // Всё ок — переходим на /expenses
+    // Проверка данных
+    const isValid =
+      savedUser &&
+      email === savedUser.email &&
+      password === savedUser.password;
+
+    if (!isValid) {
+      setError(true);
+      return;
+    }
+
+    // Успешный вход
     setError(false);
     navigate('/expenses');
   };
 
   const handleInput = (setter) => (e) => {
     setter(e.target.value);
-    if (error) setError(false);  // сбрасываем ошибку при изменении
+    if (error) setError(false); // Сброс ошибки при вводе
   };
 
   const baseClasses = `
@@ -47,7 +53,7 @@ const Login = () => {
     w-full
   `;
   const normalBorder = `border-[0.5px] border-[#999999] placeholder-[#999999] text-black`;
-  const errorBorder  = `bg-red-100 border-[1px] border-red-600 text-red-600`;
+  const errorBorder = `bg-red-100 border-[1px] border-red-600 text-red-600`;
 
   return (
     <form
@@ -95,10 +101,9 @@ const Login = () => {
 
       <button
         type="submit"
-        disabled={error}
         className={`
           rounded-[6px]
-          ${error ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#1FA46C]'}
+          ${error ? 'bg-[#1FA46C] hover:bg-[#168455]' : 'bg-[#1FA46C] hover:bg-[#168455]'}
           text-white
           text-[12px]
           font-semibold
@@ -107,6 +112,7 @@ const Login = () => {
           text-center
           font-montserrat
           py-2
+          transition
         `}
       >
         Войти
@@ -116,10 +122,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-  
