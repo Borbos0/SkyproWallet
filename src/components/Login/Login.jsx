@@ -18,13 +18,11 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Проверка на пустые поля (дополнительно, но часто делают)
     if (!email.trim() || !password.trim()) {
       setError(true);
       return;
     }
 
-    // Проверка данных
     const isValid =
       savedUser &&
       email === savedUser.email &&
@@ -35,14 +33,13 @@ const Login = () => {
       return;
     }
 
-    // Успешный вход
     setError(false);
     navigate('/expenses');
   };
 
   const handleInput = (setter) => (e) => {
     setter(e.target.value);
-    if (error) setError(false); // Сброс ошибки при вводе
+    if (error) setError(false); 
   };
 
   const baseClasses = `
