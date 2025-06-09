@@ -39,25 +39,24 @@ const Register = () => {
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-  setFormSubmitted(true);
+    e.preventDefault();
+    setFormSubmitted(true);
 
-  if (!emailValid || !passwordValid || !confirmPasswordValid) {
+    if (!emailValid || !passwordValid || !confirmPasswordValid) {
+      setIsButtonInactive(true);
+      return;
+    }
+
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ email: userEmail, password: userPassword }),
+    );
+
+    setIsFormSubmitting(true);
     setIsButtonInactive(true);
-    return;
-  }
 
-  localStorage.setItem(
-    'user',
-    JSON.stringify({ email: userEmail, password: userPassword })
-  );
-
-  setIsFormSubmitting(true);
-  setIsButtonInactive(true);
-
-  setTimeout(() => navigate('/login'), 1000);
-};
-
+    setTimeout(() => navigate('/login'), 1000);
+  };
 
   return (
     <form
@@ -121,14 +120,16 @@ const Register = () => {
       )}
 
       <button
-  type="submit"
-  disabled={isFormSubmitting || isButtonInactive}
-  className={`
+        type="submit"
+        disabled={isFormSubmitting || isButtonInactive}
+        className={`
     w-full
     rounded-[6px]
-    ${isFormSubmitting || isButtonInactive
-      ? 'bg-[#999999] cursor-not-allowed'
-      : 'bg-[rgb(31,164,108)] hover:bg-green-700'}
+    ${
+      isFormSubmitting || isButtonInactive
+        ? 'bg-[#999999] cursor-not-allowed'
+        : 'bg-[rgb(31,164,108)] hover:bg-green-700'
+    }
     text-white
     text-[12px]
     font-semibold
@@ -139,10 +140,9 @@ const Register = () => {
     py-2
     transition
   `}
->
-  Зарегистрироваться
-</button>
-
+      >
+        Зарегистрироваться
+      </button>
     </form>
   );
 };
