@@ -6,8 +6,10 @@ const AnalyticsPage = () => (
   <div>
     <Header />
     <main className="flex flex-col items-center justify-center min-h-screen">
-      <Analytics />
-      <Table/>
+      <div className="grid grid-cols-[380px_1fr] w-full px-[120px]">
+        <Analytics />
+        <Table />
+      </div>
     </main>
   </div>
 );

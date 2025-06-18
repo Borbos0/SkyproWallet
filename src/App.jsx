@@ -32,7 +32,7 @@ function App() {
           path="/"
           element={
             isAuth ? (
-              <Navigate to="/expenses" replace />
+              <Navigate to="/analytics" replace />
             ) : (
               <Navigate to="/login" replace />
             )
