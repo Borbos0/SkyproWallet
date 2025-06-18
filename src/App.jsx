@@ -6,7 +6,7 @@ import ExpensesPage from './pages/ExpensesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 
 function App() {
-  const isAuth = true;
+  const isAuth = false;
 
   return (
     <BrowserRouter>
@@ -32,7 +32,7 @@ function App() {
           path="/"
           element={
             isAuth ? (
-              <Navigate to="/analytics" replace />
+              <Navigate to="/expenses" replace />
             ) : (
               <Navigate to="/login" replace />
             )
