@@ -18,7 +18,8 @@ function App() {
         {/* Приватные роуты */}
         <Route
           path="/expenses"
-          element={isAuth ? <ExpensesPage /> : <Navigate to="/login" replace />}
+          // element={isAuth ? <ExpensesPage /> : <Navigate to="/login" replace />}
+          element={<ExpensesPage />}
         />
         <Route
           path="/analytics"
