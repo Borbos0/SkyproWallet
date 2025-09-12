@@ -1,33 +1,26 @@
-import axios from 'axios';
+import axios from "axios";
 
-const api = axios.create({
-  baseURL: 'https://wedev-api.sky.pro/api/',
-});
+const BASE_URL = "https://wedev-api.sky.pro/api/user";
 
-// Список пользователей
-export const getUsers = () =>
-  api.get('user').then((response) => response.data.users);
+export const loginUser = async (email, password) => {
+    const data = await axios.post(BASE_URL + '/login',
+        { login: email, password },
+        {
+            headers: {
+                'content-type': '',
+            },
+        },
+    )
+    return data.data.user
+}
 
-// Регистрация пользователя
-export const registerUser = (login, name, password) =>
-  api
-    .post('user', { login, name, password })
-    .then((response) => response.data.user)
-    .catch((error) => {
-      if (error.response && error.response.status === 400) {
-        throw new Error('Пользователь с таким логином уже существует');
-      }
-      throw error;
-    });
-
-// Авторизация пользователя
-export const loginUser = (login, password) =>
-  api
-    .post('user/login', { login, password })
-    .then((response) => response.data.user)
-    .catch((error) => {
-      if (error.response && error.response.status === 400) {
-        throw new Error('Неверный логин или пароль');
-      }
-      throw error;
-    });
+export const registerUser = async (email, name, password) => {
+    const data = await axios.post(BASE_URL,
+        { login: email, name, password },
+        {
+            headers: {
+                'content-type': '',
+            }
+        })
+    
+}

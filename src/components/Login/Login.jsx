@@ -1,21 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/api';
+import { setToken } from '../../utils/auth/storage';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const savedUser = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('user'));
-    } catch {
-      return null;
-    }
-  })();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim() || !password.trim()) {
@@ -23,16 +18,27 @@ const Login = () => {
       return;
     }
 
-    const isValid =
-      savedUser && email === savedUser.email && password === savedUser.password;
+    try {
+      setLoading(true);
+      setError(false);
 
-    if (!isValid) {
+      const { token, user } = await loginUser(email, password);
+
+      if (!token) {
+        console.warn('Unexpected auth response shape');
+        throw new Error('Token not found');
+      }
+
+      setToken(token);
+      if (user) localStorage.setItem('user', JSON.stringify(user));
+
+      navigate('/expenses');
+    } catch (e) {
+      console.error(e);
       setError(true);
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    setError(false);
-    navigate('/expenses');
   };
 
   const handleInput = (setter) => (e) => {
@@ -40,7 +46,7 @@ const Login = () => {
     if (error) setError(false);
   };
 
-  const baseClasses = `box-border rounded-[6px] text-[12px] leading-[15px] tracking-[0px] text-left font-montserrat px-3 py-2 w-full`;
+  const baseClasses = `box-border rounded-[6px] text-[12px] leading-[15px] tracking-[0px] text-left font-montserrat px-4 py-3 w-full`;
   const normalBorder = `border-[0.5px] border-[#999999] placeholder-[#999999] text-black`;
   const errorBorder = `bg-red-100 border-[1px] border-red-600 text-red-600`;
 
@@ -56,10 +62,7 @@ const Login = () => {
           placeholder="Email"
           value={email}
           onChange={handleInput(setEmail)}
-          className={`
-            ${baseClasses}
-            ${error ? errorBorder : normalBorder}
-          `}
+          className={`${baseClasses} ${error ? errorBorder : normalBorder}`}
         />
         {error && (
           <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
@@ -74,10 +77,7 @@ const Login = () => {
           placeholder="Пароль"
           value={password}
           onChange={handleInput(setPassword)}
-          className={`
-            ${baseClasses}
-            ${error ? errorBorder : normalBorder}
-          `}
+          className={`${baseClasses} ${error ? errorBorder : normalBorder}`}
         />
         {error && (
           <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
@@ -95,11 +95,11 @@ const Login = () => {
 
       <button
         type="submit"
-        className={`rounded-[6px] ${error ? 'bg-[#1FA46C] hover:bg-[#168455]' : 'bg-[#1FA46C] hover:bg-[#168455]'}
-        text-white text-[12px] font-semibold leading-[15px] tracking-[0px] text-center font-montserrat py-2 transition
-        `}
+        disabled={loading}
+        className={`rounded-[6px] bg-[#1FA46C] hover:bg-[#168455] text-white text-[12px] font-semibold leading-[15px] text-center font-montserrat py-[12px] transition
+        ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
       >
-        Войти
+        {loading ? 'Входим…' : 'Войти'}
       </button>
     </form>
   );
