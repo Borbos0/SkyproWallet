@@ -1,12 +1,14 @@
+// App.jsx
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ExpensesPage from './pages/ExpensesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import { useAuth } from './utils/auth/useAuth';
 
 function App() {
-  const isAuth = false;
+  const isAuth = useAuth();
 
   return (
     <BrowserRouter>
@@ -22,25 +24,16 @@ function App() {
         />
         <Route
           path="/analytics"
-          element={
-            isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />
-          }
+          element={isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />}
         />
 
-        {/* Редирект по умолчанию */}
+        {/* По умолчанию */}
         <Route
           path="/"
-          element={
-            isAuth ? (
-              <Navigate to="/expenses" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={<Navigate to={isAuth ? '/expenses' : '/login'} replace />}
         />
 
-        {/* Страница 404 */}
-        <Route path="*" element={<Navigate to="/error" replace />} />
+        <Route path="*" element={<Navigate to={isAuth ? '/expenses' : '/login'} replace />} />
       </Routes>
     </BrowserRouter>
   );

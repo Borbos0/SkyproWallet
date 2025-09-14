@@ -14,9 +14,10 @@ module.exports = {
         grey: '#999999',
         correct: '#DBFFE9',
         uncorrect: '#F25050',
+        background: '#F4F5F6',
       },
       fontFamily: {
-        montserrat: ['Montserrat'],
+        montserrat: ['Montserrat, sans-serif'],
       },
     },
   },
