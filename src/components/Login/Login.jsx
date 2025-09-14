@@ -69,9 +69,6 @@ const Login = () => {
           <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
             *
           </span>
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
-            *
-          </span>
         )}
       </div>
 
@@ -87,18 +84,14 @@ const Login = () => {
           <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
             *
           </span>
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600">
-            *
-          </span>
         )}
       </div>
 
       {error && (
         <p className="text-red-600 text-[12px] font-montserrat">
           Упс! Введенные вами данные некорректны. Введите данные корректно и
-          повторите попытку.
-          Упс! Введенные вами данные некорректны. Введите данные корректно и
-          повторите попытку.
+          повторите попытку. Упс! Введенные вами данные некорректны. Введите
+          данные корректно и повторите попытку.
         </p>
       )}
 
