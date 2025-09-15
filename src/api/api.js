@@ -22,5 +22,5 @@ export const registerUser = async (email, name, password) => {
                 'content-type': '',
             }
         })
-    
+    return data
 }

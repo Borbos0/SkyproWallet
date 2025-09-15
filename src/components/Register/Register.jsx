@@ -1,147 +1,100 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { isEmailValid, isMinLength, isRequired } from '../../utils/validation';
+import { registerUser } from '../../api/api';
+import TextInput from '../../utils/ui/TextInput';
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const [isButtonInactive, setIsButtonInactive] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
 
-  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const emailValid = isEmailValid(userEmail);
-  const passwordValid = userPassword.length >= 5;
-  const confirmPasswordValid =
-    confirmPassword === userPassword && confirmPassword !== '';
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
 
-  const showError =
-    formSubmitted && (!emailValid || !passwordValid || !confirmPasswordValid);
+  const nameOk = isRequired(name);
+  const emailOk = isEmailValid(email);
+  const passOk = isMinLength(pass, 5);
 
-  useEffect(() => {
-    if (emailValid && passwordValid && confirmPasswordValid) {
-      setIsButtonInactive(false);
-    } else if (formSubmitted) {
-      setIsButtonInactive(true);
-    }
-  }, [emailValid, passwordValid, confirmPasswordValid, formSubmitted]);
+  const anyError = submitted && (!nameOk || !emailOk || !passOk);
 
-  const inputClass = (hasError, isValid) => {
-    const baseClasses =
-      'border rounded px-3 py-2 w-full font-montserrat text-black text-[12px] font-normal leading-[15px] tracking-[0px] text-left placeholder:text-[#999999] transition-colors duration-200';
-    if (hasError)
-      return `${baseClasses} border-red-700 bg-red-100 text-red-700 placeholder:text-red-700`;
-    if (isValid)
-      return `${baseClasses} border-green-700 bg-green-100 text-green-700 placeholder:text-green-700`;
-    return `${baseClasses} border-gray-300`;
+  const handleInput = (setter) => (e) => {
+    setter(e.target.value);
+    if (submitted) setServerError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setSubmitted(true);
+    setServerError('');
 
-    if (!emailValid || !passwordValid || !confirmPasswordValid) {
-      setIsButtonInactive(true);
-      return;
+    if (!nameOk || !emailOk || !passOk) return;
+
+    try {
+      setLoading(true);
+
+      await registerUser(email, name, pass);
+
+      navigate('/login');
+    } catch (err) {
+      console.error(err);
+      const apiMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        'Не удалось завершить регистрацию';
+      setServerError(apiMsg);
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem(
-      'user',
-      JSON.stringify({ email: userEmail, password: userPassword }),
-    );
-
-    setIsFormSubmitting(true);
-    setIsButtonInactive(true);
-
-    setTimeout(() => navigate('/login'), 1000);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 w-full max-w-xs"
       noValidate
+      className="flex flex-col gap-4 w-full max-w-xs"
     >
-      <div className="relative w-full">
-        <input
-          className={inputClass(formSubmitted && !emailValid, emailValid)}
-          type="email"
-          placeholder="Email"
-          value={userEmail}
-          onChange={(e) => setUserEmail(e.target.value)}
-        />
-        {formSubmitted && !emailValid && (
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
-            *
-          </span>
-        )}
-      </div>
+      <TextInput
+        type="text"
+        placeholder="Имя"
+        value={name}
+        onChange={handleInput(setName)}
+        hasError={submitted && !nameOk}
+      />
 
-      <div className="relative w-full">
-        <input
-          className={inputClass(formSubmitted && !passwordValid, passwordValid)}
-          type="password"
-          placeholder="Пароль"
-          value={userPassword}
-          onChange={(e) => setUserPassword(e.target.value)}
-        />
-        {formSubmitted && !passwordValid && (
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
-            *
-          </span>
-        )}
-      </div>
+      <TextInput
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={handleInput(setEmail)}
+        hasError={submitted && !emailOk}
+      />
 
-      <div className="relative w-full">
-        <input
-          className={inputClass(
-            formSubmitted && !confirmPasswordValid,
-            confirmPasswordValid,
-          )}
-          type="password"
-          placeholder="Повторите пароль"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        {formSubmitted && !confirmPasswordValid && (
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-700 font-bold">
-            *
-          </span>
-        )}
-      </div>
+      <TextInput
+        type="password"
+        placeholder="Пароль"
+        value={pass}
+        onChange={handleInput(setPass)}
+        hasError={submitted && !passOk}
+      />
 
-      {showError && (
-        <p className="text-red-700 text-[12px] font-montserrat text-center">
-          Упс! Введенные вами данные не корректны. Введите данные корректно и
-          повторите попытку.
+      {(anyError || serverError) && (
+        <p className="text-red-600 text-[12px] font-montserrat text-center">
+          {serverError ||
+            'Упс! Введенные вами данные некорректны. Введите данные корректно и повторите попытку.'}
         </p>
       )}
 
       <button
         type="submit"
-        disabled={isFormSubmitting || isButtonInactive}
-        className={`
-    w-full
-    rounded-[6px]
-    ${
-      isFormSubmitting || isButtonInactive
-        ? 'bg-[#999999] cursor-not-allowed'
-        : 'bg-[rgb(31,164,108)] hover:bg-green-700'
-    }
-    text-white
-    text-[12px]
-    font-semibold
-    leading-[15px]
-    tracking-[0px]
-    text-center
-    font-montserrat
-    py-2
-    transition
-  `}
+        disabled={loading}
+        className={`rounded-[6px] bg-[#1FA46C] hover:bg-[#168455] text-white text-[12px] font-semibold leading-[15px] text-center font-montserrat py-[12px] transition
+        ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
       >
-        Зарегистрироваться
+        {loading ? 'Создаём…' : 'Зарегистрироваться'}
       </button>
     </form>
   );
