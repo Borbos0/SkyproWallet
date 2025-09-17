@@ -5,7 +5,7 @@ import Table from '../components/Analytics/Table';
 const AnalyticsPage = () => (
   <div>
     <Header />
-    <main className="flex flex-col items-center justify-center min-h-screen">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="grid grid-cols-[380px_1fr] w-full px-[120px]">
         <Analytics />
         <Table />

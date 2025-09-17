@@ -13,16 +13,8 @@ const Header = () => {
     navigate('/login', { replace: true });
   };
 
-  const user = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('user'));
-    } catch {
-      return null;
-    }
-  })();
-
   return (
-    <header className="bg-white py-4 px-6 mb-6">
+    <header className="bg-white py-3.5 px-6">
       <div className="max-w-7xl mx-auto flex items-center gap-[320px]">
         <img src={Logo} alt="Skypro Wallet Logo" className="pl-[120px]" />
 
