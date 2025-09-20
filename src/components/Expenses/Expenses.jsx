@@ -1,6 +1,6 @@
 const Expenses = () => (
   <div>
-  <div className="w-[789px] h-[618px] flex-col rounded-[30px] shadow-[0px_20px_67px_-12px_rgba(0,0,0,0.13)] bg-white mt-[116px]">
+  <div className="w-[789px] h-[618px] flex-col rounded-[30px] shadow-[0px_20px_67px_-12px_rgba(0,0,0,0.13)] bg-white mt-[32px]">
     <div className="expenses-table__header">
       <div className="flex items-baseline justify-between ml-[32px]">
         <h2 className="font-montserrat text-2xl font-bold leading-[29px] tracking-normal text-center mt-[32px] mb-[32px]">Таблица расходов</h2>

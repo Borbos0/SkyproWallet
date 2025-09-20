@@ -1,6 +1,6 @@
 const NewExpens = () => (
 <div>
-    <div className="w-[379px] h-[618px] flex-col rounded-[30px] shadow-[0px_20px_67px_-12px_rgba(0,0,0,0.13)] bg-white mt-[116px] py-[32px] pr-[32px] pl-[34px]">
+    <div className="w-[379px] h-[618px] flex-col rounded-[30px] shadow-[0px_20px_67px_-12px_rgba(0,0,0,0.13)] bg-white mt-[32px] py-[32px] pr-[32px] pl-[34px]">
         <div className="w-[313px] h-[554px] flex flex-col items-start gap-6 bg-white">
             <h2 className="text-black font-montserrat text-2xl font-bold leading-[29px] text-center">Новый расход</h2>
             <div className="w-[313px] h-[75px] flex flex-col items-start">
