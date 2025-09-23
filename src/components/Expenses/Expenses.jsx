@@ -4,8 +4,27 @@ import Filter from "./Filter";
 
 const Expenses = () => {
 
-  const [isFilterCategoryOpen, setisFilterCategoryOpe] = useState(false)
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  const toggleCategory = () => {
+    setIsCategoryOpen(!isCategoryOpen);
+    if (!isCategoryOpen && isFilterOpen) {
+      setIsFilterOpen(false);
+    }
+  };
+
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+    if (!isFilterOpen && isCategoryOpen) {
+      setIsCategoryOpen(false);
+    }
+  };
+
+  const closeAllModals = () => {
+    setIsCategoryOpen(false);
+    setIsFilterOpen(false);
+  };
 
   return (
   <div>
@@ -16,15 +35,21 @@ const Expenses = () => {
         <div className="items flex items-center">
           <div className="flex items-baseline relative">
             <div className="text-[12px] font-normal leading-[150%] tracking-normal ml-[130px]">Фильтровать по категории</div>
-            <div className="text-[#1fa46c] font-montserrat text-[12px] font-semibold leading-[150%] text-center border-b-[0.5px] border-b-[#1fa46c] ml-[6.5px]">еда</div>
-            <img className="h-[7px] w-[7px] ml-[8px]" src="/polygon 3.svg" alt="" />
-            <FilterCategory />
+            <button onClick={toggleCategory}
+                  className="flex items-baseline cursor-pointer">
+              <div className="text-[#1fa46c] font-montserrat text-[12px] font-semibold leading-[150%] text-center border-b-[0.5px] border-b-[#1fa46c] ml-[6.5px]">еда</div>
+              <img className="h-[7px] w-[7px] ml-[8px]" src="/polygon 3.svg" alt="" />
+            </button>
+            {isCategoryOpen && <FilterCategory onClose={closeAllModals} />}
           </div>
           <div className="flex items-baseline relative mr-[34px]">
             <div className="text-[12px] font-normal leading-[150%] tracking-normal ml-[24px]">Сортировать по</div>
-            <div className="text-[#1fa46c] font-montserrat text-[12px] font-semibold leading-[150%] text-center border-b-[0.5px] border-b-[#1fa46c] ml-[4px]">дате</div>
-            <img className="h-[7px] w-[7px] ml-[8px]" src="/polygon 3.svg" alt="" />
-            <Filter />
+            <button onClick={toggleFilter}
+                  className="flex items-baseline cursor-pointer">
+              <div className="text-[#1fa46c] font-montserrat text-[12px] font-semibold leading-[150%] text-center border-b-[0.5px] border-b-[#1fa46c] ml-[4px]">дате</div>
+              <img className="h-[7px] w-[7px] ml-[8px]" src="/polygon 3.svg" alt="" />
+            </button>
+            {isFilterOpen && <Filter onClose={closeAllModals} />}
           </div>  
         </div>
       </div>
