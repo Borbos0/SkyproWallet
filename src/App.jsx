@@ -24,7 +24,9 @@ function App() {
         />
         <Route
           path="/analytics"
-          element={isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />}
+          element={
+            isAuth ? <AnalyticsPage /> : <Navigate to="/login" replace />
+          }
         />
 
         {/* По умолчанию */}
@@ -33,7 +35,10 @@ function App() {
           element={<Navigate to={isAuth ? '/expenses' : '/login'} replace />}
         />
 
-        <Route path="*" element={<Navigate to={isAuth ? '/expenses' : '/login'} replace />} />
+        <Route
+          path="*"
+          element={<Navigate to={isAuth ? '/expenses' : '/login'} replace />}
+        />
       </Routes>
     </BrowserRouter>
   );

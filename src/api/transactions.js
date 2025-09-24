@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = "https://wedev-api.sky.pro/api/transactions";
+const BASE_URL = 'https://wedev-api.sky.pro/api/transactions';
 
 // Хелпер для токена
 const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
@@ -15,7 +15,7 @@ export const getTransactions = async (options = {}) => {
   const params = {};
   if (sortBy) params.sortBy = sortBy;
   if (filterBy) {
-    params.filterBy = Array.isArray(filterBy) ? filterBy.join(",") : filterBy;
+    params.filterBy = Array.isArray(filterBy) ? filterBy.join(',') : filterBy;
   }
 
   const res = await axios.get(BASE_URL, {
@@ -39,7 +39,7 @@ export const getTransactionsByPeriod = async ({ start, end }) => {
         ...getAuthHeader(),
         'content-type': '',
       },
-    }
+    },
   );
 
   return res.data;

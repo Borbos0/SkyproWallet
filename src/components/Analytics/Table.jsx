@@ -38,11 +38,6 @@ const COLOR_BY_CATEGORY = {
   others: '#FFB9B8',
 };
 
-const toMDY = (d) => {
-  const date = new Date(d);
-  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
-};
-
 const RU_MONTHS = [
   'января',
   'февраля',
@@ -58,30 +53,32 @@ const RU_MONTHS = [
   'декабря',
 ];
 
+const toMDY = (d) => {
+  const date = new Date(d);
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+};
 const formatRuDate = (d) => {
   const date = new Date(d);
   return `${date.getDate()} ${RU_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 };
 
-const Table = () => {
+export default function Table({ range }) {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
-  const [range, setRange] = useState({ start: null, end: null });
+
+  const nf = useMemo(() => new Intl.NumberFormat('ru-RU'), []);
 
   useEffect(() => {
-    const end = new Date();
-    const start = new Date(end);
-    start.setDate(end.getDate() - 120);
-
-    (async () => {
+    const load = async () => {
+      if (!range?.start || !range?.end) return;
       try {
         setLoading(true);
         setErr(null);
 
         const transactions = await getTransactionsByPeriod({
-          start: toMDY(start),
-          end: toMDY(end),
+          start: toMDY(range.start),
+          end: toMDY(range.end),
         });
 
         const sums = transactions.reduce((acc, t) => {
@@ -100,22 +97,30 @@ const Table = () => {
         })).filter((x) => x.value > 0);
 
         setChartData(prepared);
-        setRange({ start, end });
       } catch (e) {
         console.error(e);
         setErr(e);
       } finally {
         setLoading(false);
       }
-    })();
-  }, []);
+    };
+    load();
+  }, [range?.start, range?.end]);
 
   const total = useMemo(
     () => chartData.reduce((acc, item) => acc + item.value, 0),
     [chartData],
   );
 
-  const nf = useMemo(() => new Intl.NumberFormat('ru-RU'), []);
+  const rangeTitle = useMemo(() => {
+    if (!range?.start || !range?.end) return '';
+    const s = new Date(range.start);
+    const e = new Date(range.end);
+    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
+      return `${s.getDate()}—${e.getDate()} ${RU_MONTHS[e.getMonth()]} ${e.getFullYear()}`;
+    }
+    return `${formatRuDate(range.start)} — ${formatRuDate(range.end)}`;
+  }, [range]);
 
   const CustomBar = (props) => {
     const { x, y, width, height, payload } = props;
@@ -156,19 +161,9 @@ const Table = () => {
     );
   };
 
-  const rangeTitle = useMemo(() => {
-    if (!range.start || !range.end) return '';
-    const s = new Date(range.start);
-    const e = new Date(range.end);
-    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
-      return `${s.getDate()}—${e.getDate()} ${RU_MONTHS[e.getMonth()]} ${e.getFullYear()}`;
-    }
-    return `${formatRuDate(range.start)} — ${formatRuDate(range.end)}`;
-  }, [range]);
-
   if (loading) {
     return (
-      <div className="bg-white p-8 w-[600px] mx-auto shadow-md rounded-[30px]">
+      <div className="bg-white p-8 w-[789px] mx-auto shadow-md rounded-[30px]">
         <div className="text-[16px] text-gray-500">Загружаем данные…</div>
       </div>
     );
@@ -176,7 +171,7 @@ const Table = () => {
 
   if (err) {
     return (
-      <div className="bg-white p-8 w-[600px] mx-auto shadow-md rounded-[30px]">
+      <div className="bg-white p-8 w-[789px] mx-auto shadow-md rounded-[30px]">
         <div className="text-[16px] text-red-600">
           Ошибка загрузки транзакций
         </div>
@@ -198,7 +193,7 @@ const Table = () => {
           За выбранный период расходов нет
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={387}>
           <BarChart
             data={chartData}
             barSize={60}
@@ -222,6 +217,4 @@ const Table = () => {
       )}
     </div>
   );
-};
-
-export default Table;
+}
