@@ -40,17 +40,21 @@ export default function Calendar({ value, onChange, className }) {
   };
 
   return (
-    <div className={`bg-white rounded-[30px] shadow-md p-6 ${className || ''}`}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">Период</h2>
+    <div
+      className={`bg-white rounded-[30px] shadow-lg border border-gray-100 p-6 ${className || ''}`}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-black font-montserrat">
+          Период
+        </h2>
 
-        <div className="flex gap-4 text-[#2D2D2D]">
+        <div className="flex gap-4 text-black">
           <button
             type="button"
             className={
               mode === 'month'
-                ? 'underline underline-offset-4'
-                : 'text-[#7A7A7A]'
+                ? 'underline underline-offset-4 decoration-green decoration-2 text-green'
+                : 'text-black hover:text-grey'
             }
             onClick={() => setMode('month')}
           >
@@ -60,8 +64,8 @@ export default function Calendar({ value, onChange, className }) {
             type="button"
             className={
               mode === 'year'
-                ? 'underline underline-offset-4'
-                : 'text-[#7A7A7A]'
+                ? 'underline underline-offset-4 decoration-green decoration-2 text-green'
+                : 'text-black hover:text-grey'
             }
             onClick={() => setMode('year')}
           >
@@ -71,10 +75,10 @@ export default function Calendar({ value, onChange, className }) {
       </div>
 
       {mode === 'month' && (
-        <div className="max-h-[540px] overflow-auto pr-1.5 space-y-4">
+        <div className="max-h-[540px] overflow-auto pr-2 space-y-6 custom-scrollbar font-semibold">
           {monthsOfYear.map((m) => (
-            <div key={m.toISOString()} className="space-y-2">
-              <div className="font-semibold mx-2 mt-1 mb-1 capitalize">
+            <div key={m.toISOString()} className="space-y-3">
+              <div className="font-montserrat text-lg text-black mx-3 mt-1 mb-2 capitalize">
                 {m.toLocaleDateString('ru-RU', {
                   month: 'long',
                   year: 'numeric',
@@ -104,35 +108,37 @@ export default function Calendar({ value, onChange, className }) {
 
       {mode === 'year' && (
         <div>
-          <div className="flex items-center justify-between px-2 py-2 mb-2">
+          <div className="flex items-center justify-between px-4 py-3 mb-4 bg-gray-50 rounded-xl font-semibold">
             <button
               type="button"
-              className="px-2 py-1 rounded-xl hover:bg-gray-100"
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:shadow-sm transition-all duration-200 text-grey hover:text-green"
               onClick={() => setDecadeStartYear((y) => y - 10)}
             >
               ←
             </button>
-            <div className="font-semibold">
+            <div className="font-montserrat text-lg text-black">
               {decadeStartYear} – {decadeStartYear + 9}
             </div>
             <button
               type="button"
-              className="px-2 py-1 rounded-xl hover:bg-gray-100"
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:shadow-sm transition-all duration-200 text-grey hover:text-green"
               onClick={() => setDecadeStartYear((y) => y + 10)}
             >
               →
             </button>
           </div>
 
-          <div className="max-h-[540px] overflow-auto pr-1.5 space-y-3">
+          <div className="max-h-[540px] overflow-auto pr-2 space-y-5 custom-scrollbar">
             {yearsInDecade.map((y) => {
               const openTo = new Date(y, 0, 1);
               const minDate = new Date(y, 0, 1);
               const maxDate = new Date(y, 11, 31);
 
               return (
-                <div key={y} className="space-y-1.5">
-                  <div className="font-semibold mx-2 mb-1">{y}</div>
+                <div key={y} className="space-y-3">
+                  <div className="font-montserrat text-lg text-black mx-3 mb-2">
+                    {y}
+                  </div>
                   <DatePicker
                     locale={ru}
                     inline
